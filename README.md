@@ -1,3 +1,4 @@
-# bergies
+## About
 
-Collection of useful scripts of diverse functionality.
+This is just some scripts I have lying around, I'll add more stuff as I go
+through them.
