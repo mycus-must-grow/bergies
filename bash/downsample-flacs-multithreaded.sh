@@ -6,7 +6,7 @@
 #
 #   downsample-flacs-multithreaded.sh <collection path> <destinated directory>
 #
-# This script assumes you have GNU Parallel installed.
+# This script assumes you have SoX and GNU Parallel installed.
 #
 #------------------------------------------------------------------------------#
 
