@@ -4,7 +4,7 @@
 #
 # Use this script like this, with respective paths instead of the <>'s:
 #
-#   downsample-flac-collection.sh <collection path> <destinated directory>
+#   downsample-flacs-multithreaded.sh <collection path> <destinated directory>
 #
 # This script assumes you have GNU Parallel installed.
 #
