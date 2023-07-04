@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Under construction.
+
+# WARNING: Don't source (.) this script. It sets shell options and exports
+# variables.
+
+#------------------------------------------------------------- split-flacs.sh -#
+#
+# This is a script that uses multithreading to achieve a faster execution time.
+#
+# So, make sure you have GNU Parallel (and shntool) installed before running
+# this.
+#
+# Usage, substituting the <>'s:
+#
+#  sh split-flacs.sh <collection_of_flac_albums> <destination>
+#
+#------------------------------------------------------------------------------#
+
+# bash strict mode + print executed lines
+set -euxo pipefail
+IFS=$'/n/t'
+
+export from_path=$1
+export to_path=$2
+
+# Exits if there is no directory or nothing in it.
+if ! [[ -d "$from_path" && "$(ls -A "$from_path")" ]]
+then
+  exit 1
+fi
+
+mkdir -p "$to_path"
+
+#splitFlac() {
+#  from_flac="$1"
+#  to_flac="$to_path${from_flac#"$from_path"}"
+#  to_dir="$(dirname "$to_flac")"
+#  cue_file="${from_flac%".flac"}.cue"
+#
+#  shnsplit -d "$to_dir" -f "$cue_file" -o flac -t "%n - %t" "$from_flac"
+#}
+#export -f splitFlac
+#find "$from_path" -type f | parallel -I% --max-args 1 splitFlac %

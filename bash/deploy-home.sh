@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# WARNING: Don't source (.) this script. It sets shell options.
+
 #------------------------------------------------------------- deploy-home.sh -#
 #
 # Use this script like this, with respective paths instead of the <>'s:
