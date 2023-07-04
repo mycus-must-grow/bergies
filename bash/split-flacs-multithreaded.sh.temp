@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#----------------------------------------------- split-flacs-multithreaded.sh -#
+#
+# This script is used in the following form:
+#
+#  split-flacs-multithreaded.sh <collection_of_flac_albums> <destination>
+#
+#------------------------------------------------------------------------------#
+
+shnsplit -d .split/ -f *.cue -o flac -t "%n - %t" *.flac
