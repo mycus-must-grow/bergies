@@ -47,7 +47,7 @@
 #------------------------------------------------------------------------------#
 
 # Bash strict mode + print executed lines.
-set -euxo pipefail
+set -euo pipefail
 IFS=$'/n/t'
 
 export from_path=$(readlink -f "$1")
