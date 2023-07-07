@@ -61,7 +61,7 @@ fi
 if [[ -d "$to_collection" && "$(ls -A "$to_collection")" ]]
 then
     echo $'ERROR: Output directory is not empty.\n'
-    exit 2
+    exit 1
 fi
 
 # ERROR MESSAGE #3
@@ -81,7 +81,7 @@ does_filelist_contains_conflicts=$(sort <(echo "$filelist_test") | uniq -cd)
 if [[ "$does_filelist_contains_conflicts" ]]
 then
     echo $'ERROR: FLAC+WAV file name conflict detected.\n'
-    exit 3
+    exit 1
 fi
 
 # SUCCESS?
