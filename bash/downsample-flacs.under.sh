@@ -10,7 +10,7 @@
 # WHAT DOES THIS DO?
 #
 #   This script should be used when you have a collection of HQ audio files
-#   (FLACs and WAVs) and want to downsample them to 16-bit 48kHz.
+#   (FLACs and WAVs) and want to downsample them to 16-bit 48kHz FLACs.
 #
 #   It stores the output in the same directory structure the original files
 #   were, but in another location.
@@ -29,12 +29,14 @@
 #
 #------------------------------------------------------------------------------#
 
-# Bash strict mode:
+# Sets bash strict mode.
 set -euo pipefail
 IFS=$'\n\t'
 
-export from_collection=${1%"/"}
-export to_collection=${2%"/"}
+# Read both inputs and canonicalize them. Also exports them for future reuse on
+# piped shell, line #53.
+export from_collection=$(readlink -f "$1")
+export to_collection=$(readlink -f "$2")
 
 # Exits if there is no directory or nothing in it.
 if ! [[ -d "$from_collection" && "$(ls -A "$from_collection")" ]]
@@ -45,21 +47,24 @@ fi
 mkdir -p "$to_collection"
 
 resampleFlac() {
-    from_file=$1
+    # This "$1" is not the same one from line #38, it is the file piped in line
+    # #79.
+    from_file=$(readlink -f "$1")
     to_file="$to_collection/${from_file#"$from_collection"}"
+    to_file="${to_file%.*}.flac"
 
-    # Dirname never returns strings ending with "/",
-    # unless the directory is the system root.
+    # Dirname never returns strings ending with "/", unless the directory is the
+    # system root.
     to_dir=$(dirname "$to_file")
     mkdir -p "$to_dir"
 
     echo "Processing: $from_file"
-    if [[ "$from_file" == *.flac ]]
+    if [[ "${from_file,,}" == *.flac || "${from_file,,}" == *.wav ]]
     then
         sox -G "$from_file" -b 16 "$to_file" rate -v -L 48000 dither -s
 
         # Spectrogram stuff, feel free to discard the following 5 lines.
-        mkdir "$to_dir/spectrals/"
+        mkdir -p "$to_dir/spectrals/"
         to_file_basename=$(basename "$to_file")
         to_filename_wo_ext="$to_dir/spectrals/${to_file_basename%.flac}"
         sox "$from_file" -n spectrogram -o "$to_filename_wo_ext.old.jpg"
