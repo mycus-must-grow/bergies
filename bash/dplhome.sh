@@ -1,11 +1,17 @@
 #!/bin/bash
 
-# INFO: This doesn't work. It is a draft.
+# INFO: This shouldn't work. It is a draft.
 
+# Set unofficial bash strict mode.
 set -euxo pipefail
 IFS=$'\n\t'
 
-usage()
+help_asked=$( printf '%s\n' "$@" | awk '/^-h$/ || /^--help$/ { print }' )
+listfile=
+listitem_root=
+user=$(whoami)
+
+usage()  #- this is a 82 characters wide ruler ;) ----------------------------------------#
 {
     echo "usage: dplhome.sh [itemlist] [directory/]"
     echo
@@ -26,10 +32,8 @@ usage()
 }
 
 main()
-{   
-    if [ $# -lt 1 ] ||                                                         \
-       [ -n "$( { for arg in "$@"; do echo "$arg"; done } |                    \
-            awk '/^-h$/ || /^--help$/ { print }' )" ]; then
+{
+    if [ $# -lt 1 ] || [ "$help_asked" ]; then
         usage
         exit
     fi
