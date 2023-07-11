@@ -6,20 +6,19 @@
 set -euxo pipefail
 IFS=$'\n\t'
 
-help_asked=$( printf '%s\n' "$@" | awk '/^-h$/ || /^--help$/ { print }' )
 listfile=
 listitem_root=
 user=$(whoami)
 
 usage()  #- this is a 82 characters wide ruler ;) ----------------------------------------#
 {
-    echo "usage: dplhome.sh [itemlist] [directory/]"
+    echo "Usage: dplhome.sh [item_list] [directory/]"
     echo
     echo "dplhome.sh links things to your home."
     echo
-    echo "If you have an 'itemlist' and a 'directory/', it will look for the items inside"
-    echo "the list in the directory, and then link them in your home while keeping the"
-    echo "original directory structure."
+    echo "If you have an 'item_list' and a 'directory/', it will look for the items inside"
+    echo "the list in the specified directory, and then link them in your home while"
+    echo "keeping the original directory structure."
     echo
     echo "An example of the itemlist's content:"
     echo
@@ -29,14 +28,46 @@ usage()  #- this is a 82 characters wide ruler ;) ------------------------------
     echo "    .config/yt-dlp"
     echo "    .ssh"
     echo
+    echo "Options:"
+    echo
+    echo "    -h, --help:  Prints this."
 }
 
 main()
 {
-    if [ $# -lt 1 ] || [ "$help_asked" ]; then
+    help_asked=$( printf '%s\n' "$@" | awk '/^-h$/ || /^--help$/ { print }' )
+    if [ $# -gt 2 ] || [ "$help_asked" ]; then
         usage
         exit
     fi
+
+    case $# in
+        0)
+            listitem_root=$( pwd -P )
+            listfile=$( ls -Aw 1 )
+            ;;
+        1)
+            if [ -d "$1" ]; then
+                listitem_root=$1
+                listfile=$( ls -Aw 1 "$listitem_root" )
+            elif [ -f "$1" ]; then
+                listitem_root=$( dirname "$1" )
+                listfile=$( < "$1" )
+            else
+                usage
+                exit
+            fi
+            ;;
+        2)
+            if [ -f "$1" ] && [ -d "$2" ]; then
+                listitem_root=$2
+                listfile=$( < "$1" )
+            else
+                usage
+                exit
+            fi
+            ;;
+    esac
 }
 
 main "$@"
